@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Inventory from "./Inventory/index";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -17,9 +17,11 @@ const Profile = () => {
         message.error(error.message);
       });
   };
-  if (!localStorage.getItem("user")) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (!localStorage.getItem("user")) {
+      navigate("/login");
+    }
+  }, []);
   return (
     <div>
       <div className="w-screen text-right"><Button type="primary" danger onClick={() => logout()}>Logout</Button></div>
