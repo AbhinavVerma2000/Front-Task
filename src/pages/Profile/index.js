@@ -12,6 +12,7 @@ const Profile = () => {
       .then(() => {
         message.success("Logout Successful");
         navigate("/login");
+        localStorage.removeItem("user");
       })
       .catch((error) => {
         message.error(error.message);
