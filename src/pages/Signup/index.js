@@ -1,34 +1,44 @@
-import { Button, Form, Input ,message } from "antd";
-import React from "react";
+import { Button, Form, Input, message } from "antd";
+import React, { use } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { antdvalidations } from "../../components/validation";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { db } from "../../firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const Signup = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const onFinish = async (values) => {
     try {
       const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password)
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
       updateProfile(auth.currentUser, {
-        displayName: values.name
-      })
-      const user = userCredential.user
-      const formDatacopy = {...values}
-      delete formDatacopy.password
-      formDatacopy.timestamp = serverTimestamp()
-      await setDoc(doc(db, "users", user.uid), formDatacopy)
-      navigate('/')
-      localStorage.setItem('user', JSON.stringify(userCredential.user))
+        displayName: values.name,
+      });
+      const user = userCredential.user;
+      const formDatacopy = { ...values };
+      delete formDatacopy.password;
+      formDatacopy.timestamp = serverTimestamp();
+      await setDoc(doc(db, "users", user.uid), formDatacopy);
+      navigate("/");
+      localStorage.setItem("user", JSON.stringify(userCredential.user));
     } catch (error) {
-      message.error(error.message)
+      message.error(error.message);
     }
   };
-  if (localStorage.getItem('user')) {
-    navigate('/')
-  }
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      navigate("/");
+    }
+  }, [navigate]);
   return (
     <div className="bg-primary flex h-screen w-screen items-center justify-center">
       <Form
