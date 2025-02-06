@@ -1,26 +1,32 @@
-import { Button, Form, Input ,message } from "antd";
-import React from "react";
+import { Button, Form, Input, message } from "antd";
+import React, { use, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { antdvalidations } from "../../components/validation";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const onFinish = async (values) => {
     try {
-      const auth = getAuth()
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password)
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
       if (userCredential.user) {
-        navigate('/')
-        localStorage.setItem('user', JSON.stringify(userCredential.user))
+        navigate("/");
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
       }
     } catch (error) {
-      message.error(error.message)
+      message.error(error.message);
     }
   };
-  if (localStorage.getItem('user')) {
-    navigate('/')
-  }
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      navigate("/");
+    }
+  }, [navigate]);
   return (
     <div className="bg-primary flex h-screen w-screen items-center justify-center">
       <Form
